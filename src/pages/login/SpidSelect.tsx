@@ -14,10 +14,13 @@ import { ENABLE_LANDING_REDIRECT } from '../../utils/constants';
 import { storageSpidSelectedOps } from '../../utils/storage';
 
 const Login = ({ onBack, isCurrentVersion }: { onBack: () => void; isCurrentVersion: boolean }) => {
-  const basePath = isCurrentVersion ? ENV.URL_API.LOGIN : ENV.URL_API.LOGIN_SPID;
   const { t } = useTranslation();
   const getSPID = (IDP: IdentityProvider) => {
     storageSpidSelectedOps.write(IDP.entityId);
+    const basePath =
+      isCurrentVersion || IDP.entityId === 'xx_testenv2'
+        ? ENV.URL_API.LOGIN
+        : ENV.URL_API.LOGIN_SPID;
     const redirectUrl = `${basePath}/login?entityID=${IDP.entityId}&authLevel=SpidL2`;
     trackEvent(
       'LOGIN_IDP_SELECTED',
